@@ -1,3 +1,4 @@
+import { Button } from "@radix-ui/themes"
 import { WalletOptions } from "../WalletOptions"
 
 interface NavbarProps {
@@ -14,12 +15,13 @@ export function Navbar({ isConnected, onDisconnect }: NavbarProps) {
       {!isConnected ? (
         <WalletOptions />
       ) : (
-        <button
+        <Button
           onClick={onDisconnect}
-          className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md"
+          size="3"
+          className="disabled:bg-gray-700 disabled:hover:bg-gray-700 disabled:text-gray-500 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md"
         >
           Disconnect
-        </button>
+        </Button>
       )}
     </nav>
   )

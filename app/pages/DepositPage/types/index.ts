@@ -1,0 +1,1 @@
+export type { DepositFormData } from '../schemas/depositSchema' 

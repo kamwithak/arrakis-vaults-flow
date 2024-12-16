@@ -1,4 +1,5 @@
 export * from './Account'
 export * from './Navbar'
 export * from './Select'
+export * from './Input'
 export * from './WalletOptions' 
