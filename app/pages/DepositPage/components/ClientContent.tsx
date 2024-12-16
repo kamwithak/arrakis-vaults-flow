@@ -7,7 +7,7 @@ import { useTokenSelect } from "../hooks/useTokenSelect"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { depositSchema } from "../schemas/depositSchema"
-import type { DepositFormData } from "../types"
+import type { DepositFormData, TokenType } from "../types"
 import { ExecuteButton } from "./ExecuteButton"
 import { useExecuteOnChain } from "../hooks/useExecuteOnChain"
 
@@ -20,21 +20,22 @@ export function ClientContent() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch
+    watch,
   } = useForm<DepositFormData>({
     resolver: zodResolver(depositSchema),
     mode: 'onChange',
     defaultValues: {
-      amount: ''
+      amount: '',
+      tokenType: 'weth'
     }
   })
 
   const amount = watch('amount')
+
   const { 
-    hasAllowance,
+    allowances: { hasAllowance, hasWethAllowance, hasRethAllowance },
+    execute: { executeApproval, executeDeposit },
     error,
-    executeApproval,
-    executeDeposit,
     setError
   } = useExecuteOnChain({
     selected,
@@ -43,12 +44,22 @@ export function ClientContent() {
   })
 
   const onSubmit = async (data: DepositFormData) => {
+    console.log('Form submitted:', { data, selected, amount })
+    
+    if (!selected) return
+
     try {
       if (!hasAllowance) {
-        await executeApproval(data.amount)
-      } else {
-        await executeDeposit(data.amount)
+        const tokenType = selected as TokenType
+        const needsWethApproval = tokenType === 'weth' && !hasWethAllowance
+        const needsRethApproval = tokenType === 'reth' && !hasRethAllowance
+
+        if (needsWethApproval || needsRethApproval) {
+          await executeApproval(tokenType, data.amount)
+          return
+        }
       }
+      await executeDeposit(data.amount)
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Transaction failed')
     }
@@ -70,7 +81,10 @@ export function ClientContent() {
               Requires approval of the token before depositing
             </p>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+          <form 
+            onSubmit={handleSubmit(onSubmit)} 
+            className="flex flex-col gap-8"
+          >
             <div className="flex items-start gap-4">
               <Select
                 options={options}
@@ -101,8 +115,11 @@ export function ClientContent() {
             <div className="flex flex-col gap-4">
               <ExecuteButton
                 isSubmitting={isSubmitting}
-                hasAllowance={!!hasAllowance}
+                hasAllowance={hasAllowance}
+                hasWethAllowance={hasWethAllowance}
+                hasRethAllowance={hasRethAllowance}
                 disabled={isSubmitting || !isConnected || !selected || !amount}
+                selectedToken={selected as TokenType}
               />
               <div className="h-6">
                 {error && (

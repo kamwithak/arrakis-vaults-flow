@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useWethApproval, useRethApproval } from "@/app/utils/hooks"
 import { parseEther } from "viem"
 import { ContractFunctionExecutionError } from "viem"
+import { TokenType } from '../types'
 
 interface UseExecuteOnChainProps {
   selected?: string
@@ -11,11 +12,17 @@ interface UseExecuteOnChainProps {
   isConnected: boolean
 }
 
-interface UseExecuteOnChain {
-  hasAllowance: boolean
+interface UseExecuteOnChainReturn {
+  allowances: {
+    hasAllowance: boolean
+    hasWethAllowance: boolean
+    hasRethAllowance: boolean
+  }
+  execute: {
+    executeApproval: (tokenType: 'weth' | 'reth', amount: string) => Promise<void>
+    executeDeposit: (amount: string) => Promise<void>
+  }
   error: string | undefined
-  executeApproval: (amount: string) => Promise<void>
-  executeDeposit: (amount: string) => Promise<void>
   setError: (error: string | undefined) => void
 }
 
@@ -23,20 +30,23 @@ export function useExecuteOnChain({
   selected, 
   amount,
   isConnected 
-}: UseExecuteOnChainProps): UseExecuteOnChain {
+}: UseExecuteOnChainProps): UseExecuteOnChainReturn {
   const [error, setError] = useState<string>()
   
   const { approveWeth, allowance: wethAllowance } = useWethApproval()
   const { approveReth, allowance: rethAllowance } = useRethApproval()
 
-  const hasAllowance = selected && amount && (() => {
-    const allowance = selected === 'weth' ? wethAllowance : rethAllowance
+  const checkAllowance = (allowance: bigint | undefined, amount: string) => {
     try {
-      return allowance && allowance >= parseEther(amount)
+      return Boolean(allowance && allowance >= parseEther(amount))
     } catch {
       return false
     }
-  })()
+  }
+
+  const hasWethAllowance = amount ? checkAllowance(wethAllowance, amount) : false
+  const hasRethAllowance = amount ? checkAllowance(rethAllowance, amount) : false
+  const hasAllowance = Boolean(hasWethAllowance && hasRethAllowance)
 
   const handleExecutionError = (error: unknown) => {
     if (error instanceof ContractFunctionExecutionError) {
@@ -47,13 +57,17 @@ export function useExecuteOnChain({
     throw error
   }
 
-  const executeApproval = async (amount: string) => {
-    if (!selected || !isConnected) return
+  const executeApproval = async (tokenType: TokenType, amount: string) => {
+    if (!isConnected) return
     
     try {
       setError(undefined)
-      const approve = selected === 'weth' ? approveWeth : approveReth
-      await approve(amount)
+      
+      if (tokenType === 'weth' && !hasWethAllowance) {
+        await approveWeth(amount)
+      } else if (tokenType === 'reth' && !hasRethAllowance) {
+        await approveReth(amount)
+      }
     } catch (error) {
       console.error('Approval failed:', error)
       handleExecutionError(error)
@@ -74,10 +88,16 @@ export function useExecuteOnChain({
   }
 
   return {
-    hasAllowance: !!hasAllowance,
+    allowances: {
+      hasAllowance,
+      hasWethAllowance,
+      hasRethAllowance,
+    },
+    execute: {
+      executeApproval,
+      executeDeposit,
+    },
     error,
-    executeApproval,
-    executeDeposit,
     setError
   }
 } 

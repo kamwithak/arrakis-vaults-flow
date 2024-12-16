@@ -1,1 +1,6 @@
-export type { DepositFormData } from '../schemas/depositSchema' 
+export type TokenType = 'weth' | 'reth'
+
+export interface DepositFormData {
+  amount: string
+  tokenType: TokenType
+} 
