@@ -9,11 +9,14 @@ Deployment: https://arrakis-vaults-flow.vercel.app/
 Will update this document in 24 hours.
 
 ~~- Amount input forms~~
+
+~~- RainbowKit integration - wallet sign-on~~
+
 ~~- RHF amount validation logic~~
+
 - Action buttons for Approving and Depositing
 - Hooks for Approving and Depositing
 - Usages of ^ hooks for RETH and WETH
-- RainbowKit integration - wallet sign-on
 - ReadMe docs and considerations
 
 ## Getting Started
