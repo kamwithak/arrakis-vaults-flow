@@ -1,7 +1,7 @@
 "use client"
 
 import { useAccount, useDisconnect } from "wagmi"
-import { Navbar } from "@/app/components/Navbar"
+import { Navbar, Footer } from "@/app/components"
 import { Select, Input } from "@/app/components"
 import { useTokenSelect } from "../hooks/useTokenSelect"
 import { useForm } from "react-hook-form"
@@ -86,6 +86,7 @@ export function ClientContent() {
           </form>
         </div>
       </main>
+      <Footer />
     </>
   )
 }
