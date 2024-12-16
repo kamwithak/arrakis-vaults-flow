@@ -13,6 +13,7 @@ export function Input({
   label,
   error,
   className,
+  disabled,
   ...props 
 }: InputProps) {
   return (
@@ -29,7 +30,8 @@ export function Input({
           "bg-gray-800 border border-blue-600 text-white",
           "focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600",
           "placeholder:text-gray-400",
-          className
+          className,
+          disabled && "cursor-not-allowed",
         )}
         {...props}
       />

@@ -20,7 +20,11 @@ export function ClientContent() {
     handleSubmit,
     formState: { errors }
   } = useForm<DepositFormData>({
-    resolver: zodResolver(depositSchema)
+    resolver: zodResolver(depositSchema),
+    mode: 'onChange',
+    defaultValues: {
+      amount: ''
+    }
   })
 
   const onSubmit = (data: DepositFormData) => {
@@ -36,8 +40,8 @@ export function ClientContent() {
       <main className="flex-1 flex items-center justify-center">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold text-white"> 
-              Approve and then deposit into the protocol
+            <h1 className="text-2xl font-bold text-gray-100"> 
+              Approve and then deposit into Arrakis Vaults
             </h1>
             <p className="text-sm text-gray-300">
               Requires approval of the token before depositing
@@ -52,15 +56,23 @@ export function ClientContent() {
                 placeholder="Deposit token"
                 className="w-[180px]"
               />
-              <div className="flex items-center gap-2">
-                <Input
-                  {...register('amount')}
-                  placeholder="Deposit amount"
-                  className="w-[180px]"
-                />
-                <p className="text-gray-200">
-                  {options.find(option => option.value === selected)?.label}
-                </p>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Input
+                    {...register('amount')}
+                    placeholder="Deposit amount"
+                    disabled={!selected}
+                    className="w-[180px]"
+                  />
+                  <p className="text-gray-100 text-bold text-3xl">
+                    {options.find(option => option.value === selected)?.label}
+                  </p>
+                </div>
+                {errors.amount && (
+                  <p className="text-sm text-red-500">
+                    {errors.amount.message}
+                  </p>
+                )}
               </div>
             </div>
             <Button 
@@ -71,11 +83,6 @@ export function ClientContent() {
             >
               Deposit
             </Button>
-            {errors.amount && (
-              <p className="text-red-500">
-                Error: {errors.amount?.message}
-              </p>
-            )}
           </form>
         </div>
       </main>
