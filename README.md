@@ -4,6 +4,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 <img width="2052" alt="Screenshot 2024-12-16 at 11 01 26 AM" src="https://github.com/user-attachments/assets/fbbeb69c-0f46-4064-86ac-855324148929" />
 
+https://arrakis-vaults-flow.vercel.app/
 
 ## Getting Started
 
