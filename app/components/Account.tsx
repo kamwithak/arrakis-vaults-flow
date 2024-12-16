@@ -11,7 +11,7 @@ export function Account() {
   return (
     <div className="flex flex-col items-center gap-6">
       {ensAvatar && <img alt="ENS Avatar" src={ensAvatar} />}
-      {address && <h1 className="text-white">{ensName ? `${ensName} (${address})` : address}</h1>}
+      {address && <p className="text-white">{ensName ? `${ensName} (${address})` : address}</p>}
       <button
         onClick={() => disconnect()}
         className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md"

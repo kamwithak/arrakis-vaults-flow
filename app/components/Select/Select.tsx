@@ -4,12 +4,7 @@ import * as RadixSelect from '@radix-ui/react-select'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 import { clsx } from 'clsx'
 import Image from 'next/image'
-
-interface SelectOption {
-  value: string
-  label: string
-  imageUrl: string
-}
+import { SelectOption } from './useSelect'
 
 interface SelectProps {
   options: SelectOption[]
