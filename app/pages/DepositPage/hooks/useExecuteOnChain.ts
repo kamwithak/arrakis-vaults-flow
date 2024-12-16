@@ -19,7 +19,7 @@ interface UseExecuteOnChainReturn {
     hasRethAllowance: boolean
   }
   execute: {
-    executeApproval: (tokenType: 'weth' | 'reth', amount: string) => Promise<void>
+    executeApproval: (tokenType: TokenType, amount: string) => Promise<void>
     executeDeposit: (amount: string) => Promise<void>
   }
   error: string | undefined

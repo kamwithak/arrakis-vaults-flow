@@ -7,7 +7,7 @@ export const depositSchema = z.object({
     .min(1, "Amount is required")
     .refine((val) => !isNaN(Number(val)), "Must be a number")
     .refine((val) => Number(val) > 0, "Must be greater than 0"),
-  tokenType: z.enum(['weth', 'reth'] as const)
+  tokenType: z.enum(['weth', 'reth'] as [TokenType, TokenType]),
 })
 
 export type DepositFormData = z.infer<typeof depositSchema> 
