@@ -2,7 +2,7 @@
 
 import { useAccount, useDisconnect } from "wagmi"
 import { Navbar } from "@/app/components/Navbar"
-import { Select } from "@/app/components/Select/Select"
+import { Select } from "@/app/components/Select"
 import { useTokenSelect } from "../hooks/useTokenSelect"
 
 export function ClientContent() {
