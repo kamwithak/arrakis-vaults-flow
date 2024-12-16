@@ -2,7 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Visuals and preview of current state of application
 
-<img width="2052" alt="Screenshot 2024-12-16 at 10 47 25 AM" src="https://github.com/user-attachments/assets/cff41f97-763e-4c70-abd5-8f31cb6f3a45" />
+<img width="2052" alt="Screenshot 2024-12-16 at 11 01 26 AM" src="https://github.com/user-attachments/assets/fbbeb69c-0f46-4064-86ac-855324148929" />
+
 
 ## Getting Started
 
