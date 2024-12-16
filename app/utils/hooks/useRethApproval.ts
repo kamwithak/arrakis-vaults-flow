@@ -1,18 +1,13 @@
+'use client'
+
 import { useMemo } from 'react'
 import { useAccount, useChainId, useWriteContract, useReadContract } from 'wagmi'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { ADDRESSES } from '../contracts/addresses'
 import { ERC20_ABI } from '../contracts/abis'
 import { parseEther, type TransactionReceipt } from 'viem'
 
-interface UseRethApproval {
-  approveReth: (amount: string) => Promise<TransactionReceipt>
-  allowance: bigint | undefined
-  isLoading: boolean
-  isError: boolean
-}
-
-export function useRethApproval(): UseRethApproval {
+export function useRethApproval() {
   const chainId = useChainId()
   const { address: userAddress } = useAccount()
   
@@ -22,15 +17,14 @@ export function useRethApproval(): UseRethApproval {
 
   const { writeContractAsync } = useWriteContract()
 
-  const { data: allowance, isLoading, isError } = useQuery({
-    queryKey: ['allowance', 'reth', userAddress, addresses.VAULT],
-    queryFn: () => useReadContract({
-      address: addresses.RETH,
-      abi: ERC20_ABI,
-      functionName: 'allowance',
-      args: [userAddress!, addresses.VAULT],
-    }),
-    enabled: !!userAddress,
+  const { data: allowance, isLoading, isError } = useReadContract({
+    address: addresses.RETH,
+    abi: ERC20_ABI,
+    functionName: 'allowance',
+    args: [userAddress!, addresses.VAULT],
+    query: {
+      enabled: !!userAddress,
+    }
   })
 
   const { mutateAsync: approveReth } = useMutation({
