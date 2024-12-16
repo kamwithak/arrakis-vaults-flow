@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { useAccount, useChainId, useWriteContract, useReadContract } from 'wagmi'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { ADDRESSES } from '../contracts/addresses'
 import { ERC20_ABI } from '../contracts/abis'
 import { parseEther, type TransactionReceipt } from 'viem'
