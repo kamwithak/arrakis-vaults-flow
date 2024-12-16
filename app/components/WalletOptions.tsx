@@ -4,6 +4,7 @@ import { Button } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { Connector, useConnect } from "wagmi";
 
+// Deprecated: not being used anymore
 export function WalletOptions() {
   const { connectors, connect } = useConnect();
 
