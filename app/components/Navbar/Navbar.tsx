@@ -1,5 +1,5 @@
 import { Button } from "@radix-ui/themes"
-import { WalletOptions } from "../WalletOptions"
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 interface NavbarProps {
   isConnected: boolean
@@ -13,12 +13,13 @@ export function Navbar({ isConnected, onDisconnect }: NavbarProps) {
         Arrakis Vault Deposit Page
       </h1>
       {!isConnected ? (
-        <WalletOptions />
+        <ConnectButton />
       ) : (
         <Button
           onClick={onDisconnect}
           size="3"
           color="red"
+          radius="large"
         >
           Disconnect
         </Button>
