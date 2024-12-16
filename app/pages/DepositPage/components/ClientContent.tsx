@@ -8,17 +8,19 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { depositSchema } from "../schemas/depositSchema"
 import type { DepositFormData } from "../types"
-import { Button } from "@radix-ui/themes"
+import { ExecuteButton } from "./ExecuteButton"
+import { useExecuteOnChain } from "../hooks/useExecuteOnChain"
 
 export function ClientContent() {
   const { selected, setSelected, options } = useTokenSelect()
   const { isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-
+  
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isSubmitting },
+    watch
   } = useForm<DepositFormData>({
     resolver: zodResolver(depositSchema),
     mode: 'onChange',
@@ -27,8 +29,29 @@ export function ClientContent() {
     }
   })
 
-  const onSubmit = (data: DepositFormData) => {
-    console.log('Deposit amount:', data.amount)
+  const amount = watch('amount')
+  const { 
+    hasAllowance,
+    error,
+    executeApproval,
+    executeDeposit,
+    setError
+  } = useExecuteOnChain({
+    selected,
+    amount,
+    isConnected
+  })
+
+  const onSubmit = async (data: DepositFormData) => {
+    try {
+      if (!hasAllowance) {
+        await executeApproval(data.amount)
+      } else {
+        await executeDeposit(data.amount)
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Transaction failed')
+    }
   }
 
   return (
@@ -38,7 +61,7 @@ export function ClientContent() {
         onDisconnect={disconnect}
       />
       <main className="flex-1 flex items-center justify-center">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 w-[500px]">
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl font-bold text-gray-100"> 
               Approve and then deposit into Arrakis Vaults
@@ -75,14 +98,20 @@ export function ClientContent() {
                 )}
               </div>
             </div>
-            <Button 
-              type="submit"
-              disabled={!selected}
-              size="3"
-              className="disabled:bg-gray-700 disabled:hover:bg-gray-700 disabled:text-gray-500 bg-blue-600 hover:bg-blue-500 text-white"
-            >
-              Deposit
-            </Button>
+            <div className="flex flex-col gap-4">
+              <ExecuteButton
+                isSubmitting={isSubmitting}
+                hasAllowance={!!hasAllowance}
+                disabled={isSubmitting || !isConnected || !selected || !amount}
+              />
+              <div className="h-6">
+                {error && (
+                  <p className="text-sm text-red-500">
+                    Error: {error}
+                  </p>
+                )}
+              </div>
+            </div>
           </form>
         </div>
       </main>
