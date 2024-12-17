@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useWethApproval, useRethApproval } from "@/app/utils/hooks"
+import { useWethApproval, useRethApproval, useVaultDeposit } from "@/app/utils/hooks"
 import { parseEther } from "viem"
 import { ContractFunctionExecutionError } from "viem"
 import { TokenType } from '../types'
@@ -35,6 +35,7 @@ export function useExecuteOnChain({
   
   const { approveWeth, allowance: wethAllowance } = useWethApproval()
   const { approveReth, allowance: rethAllowance } = useRethApproval()
+  const { deposit } = useVaultDeposit()
 
   const checkAllowance = (allowance: bigint | undefined, amount: string) => {
     try {
@@ -79,8 +80,13 @@ export function useExecuteOnChain({
     
     try {
       setError(undefined)
-      // TODO: Implement deposit logic
-      console.log('Deposit amount:', amount)
+      await deposit({
+        amount0Max: amount,
+        amount1Max: amount,
+        amount0Min: '0',
+        amount1Min: '0',
+        amountSharesMin: '0'
+      })
     } catch (error) {
       console.error('Deposit failed:', error)
       handleExecutionError(error)
