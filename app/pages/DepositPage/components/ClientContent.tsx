@@ -3,67 +3,25 @@
 import { useAccount, useDisconnect } from "wagmi"
 import { Navbar, Footer } from "@/app/components"
 import { Select, Input } from "@/app/components"
-import { useTokenSelect } from "../hooks/useTokenSelect"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { depositSchema } from "../schemas/depositSchema"
-import type { DepositFormData, TokenType } from "../types"
 import { ExecuteButton } from "./ExecuteButton"
-import { useExecuteOnChain } from "../hooks/useExecuteOnChain"
+import { useDepositForm } from "../hooks/useDepositForm"
+import { TokenType } from "../types"
 
 export function ClientContent() {
-  const { selected, setSelected, options } = useTokenSelect()
-  const { isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  
+  const { isConnected } = useAccount()
+
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm<DepositFormData>({
-    resolver: zodResolver(depositSchema),
-    mode: 'onChange',
-    defaultValues: {
-      amount: '',
-      tokenType: 'weth'
+    form: { register, handleSubmit, errors, isSubmitting, onSubmit },
+    token: { selected, setSelected, options },
+    state: { 
+      amount, 
+      error, 
+      hasAllowance,
+      hasWethAllowance,
+      hasRethAllowance
     }
-  })
-
-  const amount = watch('amount')
-
-  const { 
-    allowances: { hasAllowance, hasWethAllowance, hasRethAllowance },
-    execute: { executeApproval, executeDeposit },
-    error,
-    setError
-  } = useExecuteOnChain({
-    selected,
-    amount,
-    isConnected
-  })
-
-  const onSubmit = async (data: DepositFormData) => {
-    console.log('Form submitted:', { data, selected, amount })
-    
-    if (!selected) return
-
-    try {
-      if (!hasAllowance) {
-        const tokenType = selected as TokenType
-        const needsWethApproval = tokenType === 'weth' && !hasWethAllowance
-        const needsRethApproval = tokenType === 'reth' && !hasRethAllowance
-
-        if (needsWethApproval || needsRethApproval) {
-          await executeApproval(tokenType, data.amount)
-          return
-        }
-      }
-      await executeDeposit(data.amount)
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Transaction failed')
-    }
-  }
+  } = useDepositForm()
 
   return (
     <>

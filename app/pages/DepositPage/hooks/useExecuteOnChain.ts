@@ -5,11 +5,11 @@ import { useWethApproval, useRethApproval, useVaultDeposit } from "@/app/utils/h
 import { parseEther } from "viem"
 import { ContractFunctionExecutionError } from "viem"
 import { TokenType } from '../types'
+import { useAccount } from 'wagmi'
 
 interface UseExecuteOnChainProps {
   selected?: string
   amount?: string
-  isConnected: boolean
 }
 
 interface UseExecuteOnChainReturn {
@@ -29,13 +29,14 @@ interface UseExecuteOnChainReturn {
 export function useExecuteOnChain({ 
   selected, 
   amount,
-  isConnected 
 }: UseExecuteOnChainProps): UseExecuteOnChainReturn {
   const [error, setError] = useState<string>()
-  
+
   const { approveWeth, allowance: wethAllowance } = useWethApproval()
   const { approveReth, allowance: rethAllowance } = useRethApproval()
   const { deposit } = useVaultDeposit()
+
+  const { isConnected } = useAccount()
 
   const checkAllowance = (allowance: bigint | undefined, amount: string) => {
     try {
