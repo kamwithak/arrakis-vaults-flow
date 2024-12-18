@@ -1,4 +1,4 @@
-# Arrakis Vault Application
+# Arrakis Vaults Application
 
 A Next.js application for interacting with Arrakis Vaults on Arbitrum.
 
