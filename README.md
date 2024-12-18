@@ -4,7 +4,7 @@ A Next.js application for interacting with Arrakis Vaults on Arbitrum.
 
 ## Visuals and deployment
 
-Deployment: https://arrakis-vaults-flow.vercel.app/
+Live: https://arrakis-vaults-flow.vercel.app/
 
 https://github.com/user-attachments/assets/b99ea88f-80bf-491d-969b-3e8125d98c47
 
