@@ -67,8 +67,27 @@ app/
 
 ## Getting Started
 
-First, run the development server:
+### Installation
 
+1. Clone the repository and navigate to the project directory:
+```bash
+git clone <repository-url>
+cd arrakis-vaults-flow
+```
+
+2. Install all dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create a `.env.local` file:
+```bash
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
