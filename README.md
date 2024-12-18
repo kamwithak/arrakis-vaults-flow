@@ -19,7 +19,7 @@ app/
 │   ├── Navbar/
 │   ├── Select/
 │   └── WalletOptions/
-├── pages/               # Page components
+├── pages/                # Page components
 │   └── DepositPage/
 │       ├── components/
 │       ├── hooks/
