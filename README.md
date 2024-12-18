@@ -84,13 +84,6 @@ Required environment variables:
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 ```
 
-## Learn More
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Wagmi Documentation](https://wagmi.sh)
-- [RainbowKit Documentation](https://www.rainbowkit.com/docs/introduction)
-- [Arrakis Documentation](https://docs.arrakis.fi)
-
 ## Approval and Deposit Flow
 
 ### Token Approval Process
@@ -141,4 +134,10 @@ RETH: 0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8
 VAULT: 0x4CA9Fb1F302B6bD8421bAd9dEbd22198eB6aB723
 ```
 
+## Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Wagmi Documentation](https://wagmi.sh)
+- [RainbowKit Documentation](https://www.rainbowkit.com/docs/introduction)
+- [Arrakis Documentation](https://docs.arrakis.fi)
 
